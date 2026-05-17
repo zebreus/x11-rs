@@ -2,8 +2,13 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::ffi::{CStr, CString};
-use std::os::raw::{c_char, c_void};
+use alloc::ffi::CString;
+use alloc::format;
+use alloc::string::String;
+use alloc::vec::Vec;
+use core::ffi::{c_char, c_void, CStr};
+
+#[cfg(feature = "std")]
 use std::path::Path;
 
 use super::error::{OpenError, OpenErrorKind};
@@ -35,11 +40,39 @@ macro_rules! x11_link {
 
     impl $struct_name {
       pub fn open () -> Result<$struct_name, $crate::error::OpenError> {
-        /// Cached function pointers and global variables for X11 libraries.
-        static CACHED: once_cell::sync::OnceCell<($crate::link::DynamicLibrary, $struct_name)> = once_cell::sync::OnceCell::new();
+        #[cfg(feature = "std")]
+        {
+          /// Cached function pointers and global variables for X11 libraries.
+          static CACHED: once_cell::sync::OnceCell<($crate::link::DynamicLibrary, $struct_name)> = once_cell::sync::OnceCell::new();
 
-        // Use the cached library or open a new one.
-        let (_, funcs) = CACHED.get_or_try_init(|| {
+          // Use the cached library or open a new one.
+          let (_, funcs) = CACHED.get_or_try_init(|| {
+            unsafe {
+              let libdir = $crate::link::config::libdir::$pkg_name;
+              let lib = $crate::link::DynamicLibrary::open_multi(libdir, &[$($lib_name),*])?;
+
+              // Load every function pointer.
+              let funcs = $struct_name {
+                _private: (),
+                $($fn_name: ::core::mem::transmute(lib.symbol(stringify!($fn_name))?),)*
+                $($vfn_name: ::core::mem::transmute(lib.symbol(stringify!($vfn_name))?),)*
+                $($var_name: ::core::mem::transmute(lib.symbol(stringify!($var_name))?),)*
+              };
+
+              Ok((lib, funcs))
+            }
+          })?;
+
+          Ok($struct_name {
+            _private: (),
+            $($fn_name: funcs.$fn_name,)*
+            $($vfn_name: funcs.$vfn_name,)*
+            $($var_name: funcs.$var_name,)*
+          })
+        }
+
+        #[cfg(not(feature = "std"))]
+        {
           unsafe {
             let libdir = $crate::link::config::libdir::$pkg_name;
             let lib = $crate::link::DynamicLibrary::open_multi(libdir, &[$($lib_name),*])?;
@@ -47,21 +80,17 @@ macro_rules! x11_link {
             // Load every function pointer.
             let funcs = $struct_name {
               _private: (),
-              $($fn_name: ::std::mem::transmute(lib.symbol(stringify!($fn_name))?),)*
-              $($vfn_name: ::std::mem::transmute(lib.symbol(stringify!($vfn_name))?),)*
-              $($var_name: ::std::mem::transmute(lib.symbol(stringify!($var_name))?),)*
+              $($fn_name: ::core::mem::transmute(lib.symbol(stringify!($fn_name))?),)*
+              $($vfn_name: ::core::mem::transmute(lib.symbol(stringify!($vfn_name))?),)*
+              $($var_name: ::core::mem::transmute(lib.symbol(stringify!($var_name))?),)*
             };
 
-            Ok((lib, funcs))
-          }
-        })?;
+            // Keep the library loaded for the lifetime of the process.
+            ::core::mem::forget(lib);
 
-        Ok($struct_name {
-          _private: (),
-          $($fn_name: funcs.$fn_name,)*
-          $($vfn_name: funcs.$vfn_name,)*
-          $($var_name: funcs.$var_name,)*
-        })
+            Ok(funcs)
+          }
+        }
       }
     }
   };
@@ -114,12 +143,21 @@ impl DynamicLibrary {
     ) -> Result<DynamicLibrary, OpenError> {
         assert!(!names.is_empty());
 
-        let paths = libdir.map_or(Vec::new(), |dir| {
+        #[cfg(feature = "std")]
+        let paths: Vec<String> = libdir.map_or(Vec::new(), |dir| {
             let path = Path::new(dir);
             names
                 .iter()
-                .map(|name| path.join(name).to_str().unwrap().to_string())
-                .collect::<Vec<_>>()
+                .map(|name| String::from(path.join(name).to_str().unwrap()))
+                .collect()
+        });
+
+        #[cfg(not(feature = "std"))]
+        let paths: Vec<String> = libdir.map_or(Vec::new(), |dir| {
+            names
+                .iter()
+                .map(|name| format!("{}/{}", dir, name))
+                .collect()
         });
 
         let mut msgs = Vec::new();

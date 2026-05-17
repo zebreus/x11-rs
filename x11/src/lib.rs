@@ -8,6 +8,7 @@
 #![allow(improper_ctypes)]
 #![allow(deref_nullptr)]
 #![allow(clippy::missing_safety_doc)]
+#![no_std]
 
 extern crate libc;
 

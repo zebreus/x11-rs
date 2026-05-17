@@ -7,6 +7,12 @@
 #![allow(non_upper_case_globals)]
 #![allow(deref_nullptr)]
 #![allow(clippy::missing_safety_doc)]
+#![no_std]
+
+extern crate alloc;
+
+#[cfg(feature = "std")]
+extern crate std;
 
 extern crate libc;
 

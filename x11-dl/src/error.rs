@@ -2,8 +2,8 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::error::Error;
-use std::fmt::{Display, Formatter};
+use alloc::string::String;
+use core::fmt::{self, Display, Formatter};
 
 //
 // OpenError
@@ -31,8 +31,7 @@ impl OpenError {
 }
 
 impl Display for OpenError {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), ::std::fmt::Error> {
-        //try!(f.write_str(self.kind.as_str())); TEST Erle July 2020 (on dev branch)
+    fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> {
         f.write_str(self.kind.as_str())?;
         if !self.detail.is_empty() {
             f.write_str(" (")?;
@@ -43,7 +42,8 @@ impl Display for OpenError {
     }
 }
 
-impl Error for OpenError {
+#[cfg(feature = "std")]
+impl std::error::Error for OpenError {
     fn description(&self) -> &str {
         self.kind.as_str()
     }

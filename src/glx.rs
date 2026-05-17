@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_char, c_int, c_uchar, c_uint, c_ulong};
+use core::ffi::{c_char, c_int, c_uchar, c_uint, c_ulong};
 
 use super::xlib::{Display, XVisualInfo, XID};
 
@@ -201,7 +201,7 @@ pub const GLX_PBUFFER: c_int = 0x8023;
 //
 
 pub mod arb {
-    use std::os::raw::c_int;
+    use core::ffi::c_int;
 
     // context attributes
     pub const GLX_CONTEXT_MAJOR_VERSION_ARB: c_int = 0x2091;
@@ -223,7 +223,7 @@ pub mod arb {
 //
 
 pub mod ext {
-    use std::os::raw::c_int;
+    use core::ffi::c_int;
 
     // drawable attributes
     pub const GLX_SWAP_INTERVAL_EXT: c_int = 0x20f1;

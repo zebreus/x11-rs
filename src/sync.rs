@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_char, c_int, c_long, c_uchar, c_uint, c_ulong};
+use core::ffi::{c_char, c_int, c_long, c_uchar, c_uint, c_ulong};
 
 use crate::xlib::{Bool, Display, Drawable, Status, Time, XID};
 

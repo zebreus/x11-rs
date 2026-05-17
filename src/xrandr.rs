@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_char, c_int, c_long, c_short, c_uchar, c_uint, c_ulong, c_ushort};
+use core::ffi::{c_char, c_int, c_long, c_short, c_uchar, c_uint, c_ulong, c_ushort};
 
 use super::xlib::{Atom, Bool, Display, Drawable, Status, Time, Window, XEvent, XID};
 use super::xrender::{XFixed, XTransform};

@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_int, c_long, c_uint, c_ulong};
+use core::ffi::{c_int, c_long, c_uint, c_ulong};
 
 use crate::sync::XSyncFence;
 use crate::xfixes::XserverRegion;

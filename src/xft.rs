@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::*;
+use core::ffi::*;
 
 use super::xlib::{Display, Region, Visual, XRectangle};
 use super::xrender::{XGlyphInfo, XRenderColor};

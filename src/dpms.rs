@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::c_int;
+use core::ffi::c_int;
 
 use super::xlib::{Bool, Display, Status};
 use super::xmd::{BOOL, CARD16};

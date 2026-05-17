@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_char, c_float, c_int, c_uchar, c_uint, c_ulong, c_ushort};
+use core::ffi::{c_char, c_float, c_int, c_uchar, c_uint, c_ulong, c_ushort};
 
 use super::xlib::{Bool, Display, Time, Window, XEvent};
 

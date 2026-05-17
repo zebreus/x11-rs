@@ -77,12 +77,22 @@ macro_rules! x11_link {
           use core::sync::atomic::{AtomicPtr, Ordering};
 
           /// Cached function pointers and global variables (no-std path).
+          /// The pointer stored here is allocated via `Box::into_raw` and intentionally
+          /// never freed — it lives for the entire process lifetime. Do not drop or
+          /// replace the pointer once it has been stored.
           static CACHED: AtomicPtr<$struct_name> = AtomicPtr::new(core::ptr::null_mut());
 
-          // Fast path: return a copy from the already-initialised cache.
+          // Fast path: return a field-by-field copy from the already-initialised cache.
           let existing = CACHED.load(Ordering::Acquire);
           if !existing.is_null() {
-            return Ok(unsafe { core::ptr::read(existing) });
+            return Ok(unsafe {
+              $struct_name {
+                _private: (),
+                $($fn_name: (*existing).$fn_name,)*
+                $($vfn_name: (*existing).$vfn_name,)*
+                $($var_name: (*existing).$var_name,)*
+              }
+            });
           }
 
           unsafe {
@@ -104,16 +114,26 @@ macro_rules! x11_link {
             match CACHED.compare_exchange(
               core::ptr::null_mut(),
               new_ptr,
-              Ordering::Release,
+              Ordering::AcqRel,
               Ordering::Acquire,
             ) {
-              Ok(_) => Ok(core::ptr::read(new_ptr)),
+              Ok(_) => Ok($struct_name {
+                _private: (),
+                $($fn_name: (*new_ptr).$fn_name,)*
+                $($vfn_name: (*new_ptr).$vfn_name,)*
+                $($var_name: (*new_ptr).$var_name,)*
+              }),
               Err(winner) => {
                 // Another thread raced and stored its pointer first; discard ours.
                 // (The extra dlopen reference from our forgotten lib handle is
                 // harmless: dlopen refcounts, and we never dlclose it.)
                 drop(Box::from_raw(new_ptr));
-                Ok(core::ptr::read(winner))
+                Ok($struct_name {
+                  _private: (),
+                  $($fn_name: (*winner).$fn_name,)*
+                  $($vfn_name: (*winner).$vfn_name,)*
+                  $($var_name: (*winner).$var_name,)*
+                })
               }
             }
           }

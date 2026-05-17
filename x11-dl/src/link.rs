@@ -73,6 +73,18 @@ macro_rules! x11_link {
 
         #[cfg(not(feature = "std"))]
         {
+          use alloc::boxed::Box;
+          use core::sync::atomic::{AtomicPtr, Ordering};
+
+          /// Cached function pointers and global variables (no-std path).
+          static CACHED: AtomicPtr<$struct_name> = AtomicPtr::new(core::ptr::null_mut());
+
+          // Fast path: return a copy from the already-initialised cache.
+          let existing = CACHED.load(Ordering::Acquire);
+          if !existing.is_null() {
+            return Ok(unsafe { core::ptr::read(existing) });
+          }
+
           unsafe {
             let libdir = $crate::link::config::libdir::$pkg_name;
             let lib = $crate::link::DynamicLibrary::open_multi(libdir, &[$($lib_name),*])?;
@@ -88,7 +100,22 @@ macro_rules! x11_link {
             // Keep the library loaded for the lifetime of the process.
             ::core::mem::forget(lib);
 
-            Ok(funcs)
+            let new_ptr = Box::into_raw(Box::new(funcs));
+            match CACHED.compare_exchange(
+              core::ptr::null_mut(),
+              new_ptr,
+              Ordering::Release,
+              Ordering::Acquire,
+            ) {
+              Ok(_) => Ok(core::ptr::read(new_ptr)),
+              Err(winner) => {
+                // Another thread raced and stored its pointer first; discard ours.
+                // (The extra dlopen reference from our forgotten lib handle is
+                // harmless: dlopen refcounts, and we never dlclose it.)
+                drop(Box::from_raw(new_ptr));
+                Ok(core::ptr::read(winner))
+              }
+            }
           }
         }
       }

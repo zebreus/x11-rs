@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_char, c_int, c_long, c_short, c_uchar, c_uint, c_ulong, c_ushort, c_void};
+use core::ffi::{c_char, c_int, c_long, c_short, c_uchar, c_uint, c_ulong, c_ushort, c_void};
 
 use super::xlib::{
     Display, Region, Screen, Visual, XEvent, XGCValues, XSelectionRequestEvent,
@@ -364,7 +364,7 @@ enum TestEnum {
 
 #[test]
 fn enum_size_test() {
-    assert!(::std::mem::size_of::<TestEnum>() == ::std::mem::size_of::<c_int>());
+    assert!(::core::mem::size_of::<TestEnum>() == ::core::mem::size_of::<c_int>());
 }
 
 // struct typedefs

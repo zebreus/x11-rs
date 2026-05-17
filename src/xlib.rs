@@ -2,11 +2,11 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::fmt;
-use std::os::raw::{
+use core::fmt;
+use core::ffi::{
     c_char, c_double, c_int, c_long, c_schar, c_short, c_uchar, c_uint, c_ulong, c_ushort, c_void,
 };
-use std::slice;
+use core::slice;
 
 use libc::wchar_t;
 
@@ -1019,7 +1019,7 @@ enum TestEnum {
 
 #[test]
 fn enum_size_test() {
-    assert!(::std::mem::size_of::<TestEnum>() == ::std::mem::size_of::<c_int>());
+    assert!(::core::mem::size_of::<TestEnum>() == ::core::mem::size_of::<c_int>());
 }
 
 //
@@ -1134,7 +1134,7 @@ macro_rules! event_conversions_and_tests {
   { $($field:ident: $ty:ty,)* } => {
     #[test]
     fn xevent_size_test () {
-      use std::mem::size_of;
+      use core::mem::size_of;
       let xevent_size = size_of::<XEvent>();
       $(assert!(xevent_size >= size_of::<$ty>());)*
     }
@@ -2010,7 +2010,7 @@ pub struct XkbEvent {
 #[cfg(test)]
 macro_rules! test_xkb_event_size {
   { $($ty:ty,)* } => { $(
-    assert!(::std::mem::size_of::<XkbEvent>() >= ::std::mem::size_of::<$ty>());
+    assert!(::core::mem::size_of::<XkbEvent>() >= ::core::mem::size_of::<$ty>());
   )* };
 }
 
@@ -2735,8 +2735,8 @@ client_message_data_conversions! {
 
 #[test]
 fn client_message_size_test() {
-    assert!(::std::mem::size_of::<ClientMessageData>() >= ::std::mem::size_of::<[c_char; 20]>());
-    assert!(::std::mem::size_of::<ClientMessageData>() >= ::std::mem::size_of::<[c_short; 10]>());
+    assert!(::core::mem::size_of::<ClientMessageData>() >= ::core::mem::size_of::<[c_char; 20]>());
+    assert!(::core::mem::size_of::<ClientMessageData>() >= ::core::mem::size_of::<[c_short; 10]>());
 }
 
 #[derive(Debug, Copy)]

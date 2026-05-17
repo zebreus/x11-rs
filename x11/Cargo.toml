@@ -15,6 +15,8 @@ workspace = ".."
 edition = "2021"
 
 [features]
+default = ["std"]
+std = ["libc/std"]
 all = ["dpms", 
         "glx", 
         "xcursor", 
@@ -55,7 +57,7 @@ xtst = []
 dox = []
 
 [dependencies]
-libc = "0.2"
+libc = { version = "0.2", default-features = false }
 
 [build-dependencies]
 pkg-config = "0.3.24"

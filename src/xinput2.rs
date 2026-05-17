@@ -1,6 +1,6 @@
 use super::xfixes::PointerBarrier;
 use super::xlib::{Atom, Display, Time, Window};
-use std::os::raw::{c_double, c_int, c_long, c_uchar, c_uint, c_ulong};
+use core::ffi::{c_double, c_int, c_long, c_uchar, c_uint, c_ulong};
 
 //
 // macro translations
@@ -9,15 +9,15 @@ fn mask_byte(mask_flag: i32) -> usize {
     (mask_flag >> 3) as usize
 }
 
-pub fn XISetMask(mask: &mut [::std::os::raw::c_uchar], event: i32) {
+pub fn XISetMask(mask: &mut [::core::ffi::c_uchar], event: i32) {
     mask[mask_byte(event)] |= 1 << (event & 7);
 }
 
-pub fn XIClearMask(mask: &mut [::std::os::raw::c_uchar], event: i32) {
+pub fn XIClearMask(mask: &mut [::core::ffi::c_uchar], event: i32) {
     mask[mask_byte(event)] &= 1 << (event & 7);
 }
 
-pub fn XIMaskIsSet(mask: &[::std::os::raw::c_uchar], event: i32) -> bool {
+pub fn XIMaskIsSet(mask: &[::core::ffi::c_uchar], event: i32) -> bool {
     (mask[mask_byte(event)] & (1 << (event & 7))) != 0
 }
 
@@ -218,74 +218,74 @@ pub const XI_BarrierLeaveMask: i32 = 1 << XI_BarrierLeave;
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIAddMasterInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub name: *mut ::std::os::raw::c_char,
-    pub send_core: ::std::os::raw::c_int,
-    pub enable: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub name: *mut ::core::ffi::c_char,
+    pub send_core: ::core::ffi::c_int,
+    pub enable: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIAddMasterInfo {
+impl ::core::clone::Clone for XIAddMasterInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIAddMasterInfo {
+impl ::core::default::Default for XIAddMasterInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIRemoveMasterInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub deviceid: ::std::os::raw::c_int,
-    pub return_mode: ::std::os::raw::c_int,
-    pub return_pointer: ::std::os::raw::c_int,
-    pub return_keyboard: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub return_mode: ::core::ffi::c_int,
+    pub return_pointer: ::core::ffi::c_int,
+    pub return_keyboard: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIRemoveMasterInfo {
+impl ::core::clone::Clone for XIRemoveMasterInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIRemoveMasterInfo {
+impl ::core::default::Default for XIRemoveMasterInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIAttachSlaveInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub deviceid: ::std::os::raw::c_int,
-    pub new_master: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub new_master: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIAttachSlaveInfo {
+impl ::core::clone::Clone for XIAttachSlaveInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIAttachSlaveInfo {
+impl ::core::default::Default for XIAttachSlaveInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIDetachSlaveInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub deviceid: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub deviceid: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIDetachSlaveInfo {
+impl ::core::clone::Clone for XIDetachSlaveInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIDetachSlaveInfo {
+impl ::core::default::Default for XIDetachSlaveInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
@@ -295,54 +295,54 @@ pub struct XIAnyHierarchyChangeInfo {
     pub _bindgen_data_: [u64; 3usize],
 }
 impl XIAnyHierarchyChangeInfo {
-    pub unsafe fn _type(&mut self) -> *mut ::std::os::raw::c_int {
-        let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
-        ::std::mem::transmute(raw.offset(0))
+    pub unsafe fn _type(&mut self) -> *mut ::core::ffi::c_int {
+        let raw: *mut u8 = ::core::mem::transmute(&self._bindgen_data_);
+        ::core::mem::transmute(raw.offset(0))
     }
     pub unsafe fn add(&mut self) -> *mut XIAddMasterInfo {
-        let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
-        ::std::mem::transmute(raw.offset(0))
+        let raw: *mut u8 = ::core::mem::transmute(&self._bindgen_data_);
+        ::core::mem::transmute(raw.offset(0))
     }
     pub unsafe fn remove(&mut self) -> *mut XIRemoveMasterInfo {
-        let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
-        ::std::mem::transmute(raw.offset(0))
+        let raw: *mut u8 = ::core::mem::transmute(&self._bindgen_data_);
+        ::core::mem::transmute(raw.offset(0))
     }
     pub unsafe fn attach(&mut self) -> *mut XIAttachSlaveInfo {
-        let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
-        ::std::mem::transmute(raw.offset(0))
+        let raw: *mut u8 = ::core::mem::transmute(&self._bindgen_data_);
+        ::core::mem::transmute(raw.offset(0))
     }
     pub unsafe fn detach(&mut self) -> *mut XIDetachSlaveInfo {
-        let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
-        ::std::mem::transmute(raw.offset(0))
+        let raw: *mut u8 = ::core::mem::transmute(&self._bindgen_data_);
+        ::core::mem::transmute(raw.offset(0))
     }
 }
-impl ::std::clone::Clone for XIAnyHierarchyChangeInfo {
+impl ::core::clone::Clone for XIAnyHierarchyChangeInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIAnyHierarchyChangeInfo {
+impl ::core::default::Default for XIAnyHierarchyChangeInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIModifierState {
-    pub base: ::std::os::raw::c_int,
-    pub latched: ::std::os::raw::c_int,
-    pub locked: ::std::os::raw::c_int,
-    pub effective: ::std::os::raw::c_int,
+    pub base: ::core::ffi::c_int,
+    pub latched: ::core::ffi::c_int,
+    pub locked: ::core::ffi::c_int,
+    pub effective: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIModifierState {
+impl ::core::clone::Clone for XIModifierState {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIModifierState {
+impl ::core::default::Default for XIModifierState {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
@@ -351,429 +351,429 @@ pub type XIGroupState = XIModifierState;
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIButtonState {
-    pub mask_len: ::std::os::raw::c_int,
-    pub mask: *mut ::std::os::raw::c_uchar,
+    pub mask_len: ::core::ffi::c_int,
+    pub mask: *mut ::core::ffi::c_uchar,
 }
-impl ::std::clone::Clone for XIButtonState {
+impl ::core::clone::Clone for XIButtonState {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIButtonState {
+impl ::core::default::Default for XIButtonState {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIValuatorState {
-    pub mask_len: ::std::os::raw::c_int,
-    pub mask: *mut ::std::os::raw::c_uchar,
-    pub values: *mut ::std::os::raw::c_double,
+    pub mask_len: ::core::ffi::c_int,
+    pub mask: *mut ::core::ffi::c_uchar,
+    pub values: *mut ::core::ffi::c_double,
 }
-impl ::std::clone::Clone for XIValuatorState {
+impl ::core::clone::Clone for XIValuatorState {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIValuatorState {
+impl ::core::default::Default for XIValuatorState {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIEventMask {
-    pub deviceid: ::std::os::raw::c_int,
-    pub mask_len: ::std::os::raw::c_int,
-    pub mask: *mut ::std::os::raw::c_uchar,
+    pub deviceid: ::core::ffi::c_int,
+    pub mask_len: ::core::ffi::c_int,
+    pub mask: *mut ::core::ffi::c_uchar,
 }
-impl ::std::clone::Clone for XIEventMask {
+impl ::core::clone::Clone for XIEventMask {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIEventMask {
+impl ::core::default::Default for XIEventMask {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIAnyClassInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIAnyClassInfo {
+impl ::core::clone::Clone for XIAnyClassInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIAnyClassInfo {
+impl ::core::default::Default for XIAnyClassInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIButtonClassInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub num_buttons: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub num_buttons: ::core::ffi::c_int,
     pub labels: *mut Atom,
     pub state: XIButtonState,
 }
-impl ::std::clone::Clone for XIButtonClassInfo {
+impl ::core::clone::Clone for XIButtonClassInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIButtonClassInfo {
+impl ::core::default::Default for XIButtonClassInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIKeyClassInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub num_keycodes: ::std::os::raw::c_int,
-    pub keycodes: *mut ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub num_keycodes: ::core::ffi::c_int,
+    pub keycodes: *mut ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIKeyClassInfo {
+impl ::core::clone::Clone for XIKeyClassInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIKeyClassInfo {
+impl ::core::default::Default for XIKeyClassInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIValuatorClassInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub number: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub number: ::core::ffi::c_int,
     pub label: Atom,
-    pub min: ::std::os::raw::c_double,
-    pub max: ::std::os::raw::c_double,
-    pub value: ::std::os::raw::c_double,
-    pub resolution: ::std::os::raw::c_int,
-    pub mode: ::std::os::raw::c_int,
+    pub min: ::core::ffi::c_double,
+    pub max: ::core::ffi::c_double,
+    pub value: ::core::ffi::c_double,
+    pub resolution: ::core::ffi::c_int,
+    pub mode: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIValuatorClassInfo {
+impl ::core::clone::Clone for XIValuatorClassInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIValuatorClassInfo {
+impl ::core::default::Default for XIValuatorClassInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIScrollClassInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub number: ::std::os::raw::c_int,
-    pub scroll_type: ::std::os::raw::c_int,
-    pub increment: ::std::os::raw::c_double,
-    pub flags: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub number: ::core::ffi::c_int,
+    pub scroll_type: ::core::ffi::c_int,
+    pub increment: ::core::ffi::c_double,
+    pub flags: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIScrollClassInfo {
+impl ::core::clone::Clone for XIScrollClassInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIScrollClassInfo {
+impl ::core::default::Default for XIScrollClassInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XITouchClassInfo {
-    pub _type: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub mode: ::std::os::raw::c_int,
-    pub num_touches: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub mode: ::core::ffi::c_int,
+    pub num_touches: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XITouchClassInfo {
+impl ::core::clone::Clone for XITouchClassInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XITouchClassInfo {
+impl ::core::default::Default for XITouchClassInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIDeviceInfo {
-    pub deviceid: ::std::os::raw::c_int,
-    pub name: *mut ::std::os::raw::c_char,
-    pub _use: ::std::os::raw::c_int,
-    pub attachment: ::std::os::raw::c_int,
-    pub enabled: ::std::os::raw::c_int,
-    pub num_classes: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub name: *mut ::core::ffi::c_char,
+    pub _use: ::core::ffi::c_int,
+    pub attachment: ::core::ffi::c_int,
+    pub enabled: ::core::ffi::c_int,
+    pub num_classes: ::core::ffi::c_int,
     pub classes: *mut *mut XIAnyClassInfo,
 }
-impl ::std::clone::Clone for XIDeviceInfo {
+impl ::core::clone::Clone for XIDeviceInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIDeviceInfo {
+impl ::core::default::Default for XIDeviceInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIGrabModifiers {
-    pub modifiers: ::std::os::raw::c_int,
-    pub status: ::std::os::raw::c_int,
+    pub modifiers: ::core::ffi::c_int,
+    pub status: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIGrabModifiers {
+impl ::core::clone::Clone for XIGrabModifiers {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIGrabModifiers {
+impl ::core::default::Default for XIGrabModifiers {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
-pub type BarrierEventID = ::std::os::raw::c_uint;
+pub type BarrierEventID = ::core::ffi::c_uint;
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIBarrierReleasePointerInfo {
-    pub deviceid: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
     pub barrier: PointerBarrier,
     pub eventid: BarrierEventID,
 }
-impl ::std::clone::Clone for XIBarrierReleasePointerInfo {
+impl ::core::clone::Clone for XIBarrierReleasePointerInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIBarrierReleasePointerInfo {
+impl ::core::default::Default for XIBarrierReleasePointerInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
 }
-impl ::std::clone::Clone for XIEvent {
+impl ::core::clone::Clone for XIEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIEvent {
+impl ::core::default::Default for XIEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIHierarchyInfo {
-    pub deviceid: ::std::os::raw::c_int,
-    pub attachment: ::std::os::raw::c_int,
-    pub _use: ::std::os::raw::c_int,
-    pub enabled: ::std::os::raw::c_int,
-    pub flags: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub attachment: ::core::ffi::c_int,
+    pub _use: ::core::ffi::c_int,
+    pub enabled: ::core::ffi::c_int,
+    pub flags: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIHierarchyInfo {
+impl ::core::clone::Clone for XIHierarchyInfo {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIHierarchyInfo {
+impl ::core::default::Default for XIHierarchyInfo {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIHierarchyEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub flags: ::std::os::raw::c_int,
-    pub num_info: ::std::os::raw::c_int,
+    pub flags: ::core::ffi::c_int,
+    pub num_info: ::core::ffi::c_int,
     pub info: *mut XIHierarchyInfo,
 }
-impl ::std::clone::Clone for XIHierarchyEvent {
+impl ::core::clone::Clone for XIHierarchyEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIHierarchyEvent {
+impl ::core::default::Default for XIHierarchyEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIDeviceChangedEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub reason: ::std::os::raw::c_int,
-    pub num_classes: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub reason: ::core::ffi::c_int,
+    pub num_classes: ::core::ffi::c_int,
     pub classes: *mut *mut XIAnyClassInfo,
 }
-impl ::std::clone::Clone for XIDeviceChangedEvent {
+impl ::core::clone::Clone for XIDeviceChangedEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIDeviceChangedEvent {
+impl ::core::default::Default for XIDeviceChangedEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIDeviceEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub detail: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub detail: ::core::ffi::c_int,
     pub root: Window,
     pub event: Window,
     pub child: Window,
-    pub root_x: ::std::os::raw::c_double,
-    pub root_y: ::std::os::raw::c_double,
-    pub event_x: ::std::os::raw::c_double,
-    pub event_y: ::std::os::raw::c_double,
-    pub flags: ::std::os::raw::c_int,
+    pub root_x: ::core::ffi::c_double,
+    pub root_y: ::core::ffi::c_double,
+    pub event_x: ::core::ffi::c_double,
+    pub event_y: ::core::ffi::c_double,
+    pub flags: ::core::ffi::c_int,
     pub buttons: XIButtonState,
     pub valuators: XIValuatorState,
     pub mods: XIModifierState,
     pub group: XIGroupState,
 }
-impl ::std::clone::Clone for XIDeviceEvent {
+impl ::core::clone::Clone for XIDeviceEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIDeviceEvent {
+impl ::core::default::Default for XIDeviceEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIRawEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub detail: ::std::os::raw::c_int,
-    pub flags: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub detail: ::core::ffi::c_int,
+    pub flags: ::core::ffi::c_int,
     pub valuators: XIValuatorState,
-    pub raw_values: *mut ::std::os::raw::c_double,
+    pub raw_values: *mut ::core::ffi::c_double,
 }
-impl ::std::clone::Clone for XIRawEvent {
+impl ::core::clone::Clone for XIRawEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIRawEvent {
+impl ::core::default::Default for XIRawEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIEnterEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub detail: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub detail: ::core::ffi::c_int,
     pub root: Window,
     pub event: Window,
     pub child: Window,
-    pub root_x: ::std::os::raw::c_double,
-    pub root_y: ::std::os::raw::c_double,
-    pub event_x: ::std::os::raw::c_double,
-    pub event_y: ::std::os::raw::c_double,
-    pub mode: ::std::os::raw::c_int,
-    pub focus: ::std::os::raw::c_int,
-    pub same_screen: ::std::os::raw::c_int,
+    pub root_x: ::core::ffi::c_double,
+    pub root_y: ::core::ffi::c_double,
+    pub event_x: ::core::ffi::c_double,
+    pub event_y: ::core::ffi::c_double,
+    pub mode: ::core::ffi::c_int,
+    pub focus: ::core::ffi::c_int,
+    pub same_screen: ::core::ffi::c_int,
     pub buttons: XIButtonState,
     pub mods: XIModifierState,
     pub group: XIGroupState,
 }
-impl ::std::clone::Clone for XIEnterEvent {
+impl ::core::clone::Clone for XIEnterEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIEnterEvent {
+impl ::core::default::Default for XIEnterEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
@@ -784,87 +784,87 @@ pub type XIFocusOutEvent = XIEnterEvent;
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIPropertyEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
     pub property: Atom,
-    pub what: ::std::os::raw::c_int,
+    pub what: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XIPropertyEvent {
+impl ::core::clone::Clone for XIPropertyEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIPropertyEvent {
+impl ::core::default::Default for XIPropertyEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XITouchOwnershipEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
-    pub touchid: ::std::os::raw::c_uint,
+    pub deviceid: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
+    pub touchid: ::core::ffi::c_uint,
     pub root: Window,
     pub event: Window,
     pub child: Window,
-    pub flags: ::std::os::raw::c_int,
+    pub flags: ::core::ffi::c_int,
 }
-impl ::std::clone::Clone for XITouchOwnershipEvent {
+impl ::core::clone::Clone for XITouchOwnershipEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XITouchOwnershipEvent {
+impl ::core::default::Default for XITouchOwnershipEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }
 
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct XIBarrierEvent {
-    pub _type: ::std::os::raw::c_int,
-    pub serial: ::std::os::raw::c_ulong,
-    pub send_event: ::std::os::raw::c_int,
+    pub _type: ::core::ffi::c_int,
+    pub serial: ::core::ffi::c_ulong,
+    pub send_event: ::core::ffi::c_int,
     pub display: *mut Display,
-    pub extension: ::std::os::raw::c_int,
-    pub evtype: ::std::os::raw::c_int,
+    pub extension: ::core::ffi::c_int,
+    pub evtype: ::core::ffi::c_int,
     pub time: Time,
-    pub deviceid: ::std::os::raw::c_int,
-    pub sourceid: ::std::os::raw::c_int,
+    pub deviceid: ::core::ffi::c_int,
+    pub sourceid: ::core::ffi::c_int,
     pub event: Window,
     pub root: Window,
-    pub root_x: ::std::os::raw::c_double,
-    pub root_y: ::std::os::raw::c_double,
-    pub dx: ::std::os::raw::c_double,
-    pub dy: ::std::os::raw::c_double,
-    pub dtime: ::std::os::raw::c_int,
-    pub flags: ::std::os::raw::c_int,
+    pub root_x: ::core::ffi::c_double,
+    pub root_y: ::core::ffi::c_double,
+    pub dx: ::core::ffi::c_double,
+    pub dy: ::core::ffi::c_double,
+    pub dtime: ::core::ffi::c_int,
+    pub flags: ::core::ffi::c_int,
     pub barrier: PointerBarrier,
     pub eventid: BarrierEventID,
 }
-impl ::std::clone::Clone for XIBarrierEvent {
+impl ::core::clone::Clone for XIBarrierEvent {
     fn clone(&self) -> Self {
         *self
     }
 }
-impl ::std::default::Default for XIBarrierEvent {
+impl ::core::default::Default for XIBarrierEvent {
     fn default() -> Self {
-        unsafe { ::std::mem::zeroed() }
+        unsafe { ::core::mem::zeroed() }
     }
 }

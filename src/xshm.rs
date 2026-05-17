@@ -1,5 +1,5 @@
 use super::xlib::{Bool, Display, Drawable, Pixmap, Visual, XImage, GC};
-use std::os::raw::{c_char, c_int, c_uint, c_ulong};
+use core::ffi::{c_char, c_int, c_uint, c_ulong};
 
 x11_link! { Xext, xext, ["libXext.so.6", "libXext.so"], 10,
     pub fn XShmQueryExtension(_1: *mut Display) -> Bool,

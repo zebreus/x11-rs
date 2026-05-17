@@ -2,7 +2,7 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::os::raw::{c_int, c_uint, c_ulong};
+use core::ffi::{c_int, c_uint, c_ulong};
 
 use super::xinput::XDevice;
 use super::xlib::{Display, Visual, GC};

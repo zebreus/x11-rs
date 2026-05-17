@@ -2,8 +2,8 @@
 // The X11 libraries are available under the MIT license.
 // These bindings are public domain.
 
-use std::cmp::min;
-use std::mem::{size_of, zeroed};
+use core::cmp::min;
+use core::mem::{size_of, zeroed};
 
 //
 // public functions
